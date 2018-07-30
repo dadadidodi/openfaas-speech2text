@@ -12,17 +12,18 @@ def handle(req):
     """
     url = req
 
-    if url[-3:] = 'mp4':
+    if url[-3:] == 'mp4':
         wget.download(url, './tmp.mp4')
-        cmd = "ffmpeg -y -i %s -ac 1 -f wav %s"%('tmp.mp4', 'tmp.wav')
+        cmd = "ffmpeg  -loglevel panic -y -i %s -ac 1 -f wav %s"%('tmp.mp4', 'tmp.wav')
         os.system(cmd)
         os.remove('tmp.mp4')
+        print("ffmpeg done")
     else:
         wget.download(url, "./tmp.wav")
     r = sr.Recognizer()
     myfile = os.path.join((os.getcwd()), 'tmp.wav')
-
-    saudio = sr.AudioFile("tmp.wav")
+    print(os.path.isfile(myfile))
+    saudio = sr.AudioFile(myfile)
     with saudio as source:
         audio = r.record(source)
     os.remove('tmp.wav')
@@ -32,5 +33,12 @@ def handle(req):
         output = iciba(eng, 'auto', 'zh', {})
     except ConnectError:
         print('Invaild proxy')
+
+    try:
+    	spanish = iciba(eng,'auto', 'es', proxies={})
+    except ConnectError:
+    	print('Invaild proxy')
+
     print("Chinese: %s"%output)
-    return outp
+    print("Spanish: %s"%spanish)
+    #return output
