@@ -1,1 +1,4 @@
 SpeechRecognition
+wget
+requests
+translation
