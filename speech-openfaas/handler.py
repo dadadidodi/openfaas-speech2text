@@ -3,7 +3,7 @@ import os
 import sys
 import requests
 import wget
-from translation import baidu, google, ConnectError
+from translation import baidu, google, ConnectError, bing, iciba
 
 def handle(req):
     """handle a request to the function
@@ -22,8 +22,9 @@ def handle(req):
     eng = r.recognize_google(audio)
     print("English: %s"%eng)
     try:
-        output = baidu(eng, dst='ru',proxies = {'http': '127.0.0.1:1080'})
+    #    output = iciba('good-morning', 'auto', 'zh', {})
+        output = iciba(eng, 'auto', 'zh', {})
     except ConnectError:
         print('Invaild proxy')
-    print("French: %s"%output)
+    print("Chinese: %s"%output)
     return outp
