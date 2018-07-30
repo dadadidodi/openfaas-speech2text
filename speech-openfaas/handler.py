@@ -11,7 +11,14 @@ def handle(req):
         req (str): request body
     """
     url = req
-    wget.download(url, "./tmp.wav")
+
+    if url[-3:] = 'mp4':
+        wget.download(url, './tmp.mp4')
+        cmd = "ffmpeg -y -i %s -ac 1 -f wav %s"%('tmp.mp4', 'tmp.wav')
+        os.system(cmd)
+        os.remove('tmp.mp4')
+    else:
+        wget.download(url, "./tmp.wav")
     r = sr.Recognizer()
     myfile = os.path.join((os.getcwd()), 'tmp.wav')
 
@@ -22,7 +29,6 @@ def handle(req):
     eng = r.recognize_google(audio)
     print("English: %s"%eng)
     try:
-    #    output = iciba('good-morning', 'auto', 'zh', {})
         output = iciba(eng, 'auto', 'zh', {})
     except ConnectError:
         print('Invaild proxy')
