@@ -2,6 +2,8 @@ import speech_recognition as sr
 import os
 import sys
 import requests
+import wget
+from translation import baidu, google, ConnectError
 
 def handle(req):
     """handle a request to the function
@@ -19,8 +21,9 @@ def handle(req):
     os.remove('tmp.wav')
     eng = r.recognize_google(audio)
     print("English: %s"%eng)
-    output = google(eng, dst='fr',proxies = {'http': '127.0.0.1:1080'})
+    try:
+        output = baidu(eng, dst='ru',proxies = {'http': '127.0.0.1:1080'})
+    except ConnectError:
+        print('Invaild proxy')
     print("French: %s"%output)
-    return output
-
-
+    return outp
