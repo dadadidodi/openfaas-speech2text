@@ -1,12 +1,12 @@
 provider:
   name: faas
-  gateway: http://127.0.0.1:8080
+  gateway: http://192.168.0.22:8080
 
 functions:
   speech-openfaas:
     lang: python3
     handler: ./speech-openfaas
-    image: cmurray7/speech-openfaas
+    image: dadadidodi/speech-openfaas
     environment:
       read_timeout: 60
       write_timeout: 60
