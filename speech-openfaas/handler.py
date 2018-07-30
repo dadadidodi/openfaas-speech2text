@@ -3,6 +3,7 @@ import os
 import sys
 import requests
 import wget
+import json
 from translation import baidu, google, ConnectError, bing, iciba
 
 def handle(req):
@@ -10,8 +11,14 @@ def handle(req):
     Args:
         req (str): request body
     """
-    url = req
-
+    #print(req)
+    json_load = json.loads(req)
+    url = json_load['url']
+    lang = json_load['lang']
+   # print(url)
+   # print(lang)
+   # return
+    
     if url[-3:] == 'mp4':
         wget.download(url, './tmp.mp4')
         cmd = "ffmpeg  -loglevel panic -y -i %s -ac 1 -f wav %s"%('tmp.mp4', 'tmp.wav')
@@ -27,18 +34,12 @@ def handle(req):
     with saudio as source:
         audio = r.record(source)
     os.remove('tmp.wav')
-    eng = r.recognize_google(audio)
-    print("English: %s"%eng)
+    eng = r.recognize_google(audio, language=lang)
+    print("[%s]: %s"%(lang ,eng))
     try:
         output = iciba(eng, 'auto', 'zh', {})
     except ConnectError:
         print('Invaild proxy')
 
-    try:
-    	spanish = iciba(eng,'auto', 'es', proxies={})
-    except ConnectError:
-    	print('Invaild proxy')
-
     print("Chinese: %s"%output)
-    print("Spanish: %s"%spanish)
     #return output
