@@ -2,7 +2,6 @@ import speech_recognition as sr
 import os
 import sys
 import requests
-import wave
 
 def handle(req):
     """handle a request to the function
@@ -24,8 +23,11 @@ def handle(req):
     saudio = sr.AudioFile("tmp.wav")
     with saudio as source:
         audio = r.record(source)
-    print(type(audio))
-    return r.recognize_google(audio)
-
+    os.remove('tmp.wav')
+    eng = r.recognize_google(audio)
+    print("English: %s"%eng)
+    output = google(eng, dst='fr',proxies = {'http': '127.0.0.1:1080'})
+    print("French: %s"%output)
+    return output
 
 
